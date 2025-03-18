@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "d5e06afb-8c53-44cc-8531-fb55d859ea66",
-		"name": "TMDB_ASSIGNMENT",
+		"_postman_id": "25510ece-9767-464b-b38d-877cc023a656",
+		"name": "TMDB_ASSIGNMENT Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38006417",
-		"_collection_link": "https://interstellar-desert-571069.postman.co/workspace/Gurdeep'-workspace~c75f03f0-0f08-47b4-8ce6-3336570d310c/collection/38006417-d5e06afb-8c53-44cc-8531-fb55d859ea66?action=share&source=collection_link&creator=38006417"
+		"_collection_link": "https://interstellar-desert-571069.postman.co/workspace/Gurdeep'-workspace~c75f03f0-0f08-47b4-8ce6-3336570d310c/collection/38006417-25510ece-9767-464b-b38d-877cc023a656?action=share&source=collection_link&creator=38006417"
 	},
 	"item": [
 		{
@@ -89,7 +89,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9000/movies",
+							"raw": "http://localhost:9000/movies?page=1&limit=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -97,6 +97,16 @@
 							"port": "9000",
 							"path": [
 								"movies"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
 							]
 						}
 					},
