@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Movie, MovieDocument } from './movie.schema';
 import { ApiResponse } from '../../dtos/api_response.dto';
-import { TmdbService } from './tmdb.service';
+import { TmdbService } from '../tmdb/tmdb.service';
 import { Cron } from '@nestjs/schedule';
 import { SearchMoviesDto } from '../../dtos/movies/search_movies.dto';
 
@@ -18,6 +18,7 @@ export class MoviesService {
   async syncMoviesFromTMDB(): Promise<ApiResponse> {
     try {
       const movies = await this.tmdbService.fetchPopularMovies();
+
       if (!movies || movies.length === 0) {
         return { status: HttpStatus.NO_CONTENT, message: 'No movies found!' };
       }
@@ -37,13 +38,16 @@ export class MoviesService {
         status: HttpStatus.CREATED,
         message: 'Movies synced!',
       };
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
           message: 'Failed to fetch movies from TMDB',
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
       );
     }
   }
@@ -74,9 +78,11 @@ export class MoviesService {
         {
           status: 'error',
           message: 'Failed to fetch movies from TMDB',
-          error: error.message,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
       );
     }
   }
@@ -100,9 +106,11 @@ export class MoviesService {
         {
           status: 'error',
           message: 'Failed to fetch movies!',
-          error: error.message,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
       );
     }
   }
@@ -141,9 +149,11 @@ export class MoviesService {
         {
           status: 'error',
           message: 'Failed to filter movies!',
-          error: error.message,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
       );
     }
   }

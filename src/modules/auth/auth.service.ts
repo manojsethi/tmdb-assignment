@@ -14,15 +14,13 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  generateToken(userId: any) {
+  generateToken(userId: string) {
     return this.jwtService.sign({ id: userId });
   }
 
   async signup(dto: SignupDto): Promise<ApiResponse> {
     try {
-      const { email } = dto;
-
-      const foundUserDoc = await this.userModel.findOne({ email });
+      const foundUserDoc = await this.userModel.findOne({ email: dto.email });
       if (foundUserDoc) {
         return {
           status: HttpStatus.CONFLICT,
@@ -33,10 +31,10 @@ export class AuthService {
       await this.userModel.create(dto);
 
       return { status: HttpStatus.CREATED, message: 'User created!' };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Internal server error!',
+        message: `An error occurred while signing up error ${error}!`,
       };
     }
   }
@@ -58,16 +56,16 @@ export class AuthService {
           message: 'Invalid credentials!',
         };
       }
-      const accessToken = this.generateToken(user._id);
+      const accessToken = this.generateToken(user._id as string);
 
       return {
         status: HttpStatus.OK,
         data: { accessToken, email: user.email },
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Internal server error!',
+        message: `An error occurred while signing in error ${error}!`,
       };
     }
   }

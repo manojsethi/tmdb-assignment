@@ -42,7 +42,7 @@ export class MovieRatingsService {
     } catch (error: any) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Internal server error!',
+        message: `An error occurred while rating a movie error: ${error}`,
       };
     }
   }

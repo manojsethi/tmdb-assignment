@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SigninDto, SignupDto } from '../../dtos/auth/auth.dto';
 
@@ -14,31 +8,11 @@ export class AuthController {
 
   @Post('signup')
   signup(@Body() body: SignupDto) {
-    try {
-      return this.authService.signup(body);
-    } catch (error: any) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: error?.message || 'Internal server error!',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.authService.signup(body);
   }
 
   @Post('signin')
   signin(@Body() body: SigninDto) {
-    try {
-      return this.authService.signin(body);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: error?.message || 'Internal server error!',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.authService.signin(body);
   }
 }

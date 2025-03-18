@@ -14,9 +14,12 @@ async function bootstrap() {
   const count = await movieModel.countDocuments();
 
   if (count === 0) {
-    await moviesService.syncMoviesFromTMDB();
+    //eslint-disable-next-line @typescript-eslint/no-floating-promises
+    moviesService.syncMoviesFromTMDB();
   }
 
   await app.listen(process.env.TMDB_PORT || 9000);
 }
+
+//eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
