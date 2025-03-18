@@ -2,15 +2,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ApiResponse } from '../../dtos/api_response.dto';
 import { RateMovieDto } from '../../dtos/movie_ratings/rate_movie.dto';
 import { MovieRating, MovieRatingDocument } from './movie_rating.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IUser } from '../../interfaces/user';
 import { Movie, MovieDocument } from '../movies/movie.schema';
 import { HttpStatus } from '@nestjs/common';
+import { LoggerService } from '../logger/logger.service';
 
 export class MovieRatingsService {
   constructor(
     @InjectModel(MovieRating.name)
     private movieRatingModel: Model<MovieRatingDocument>,
+    private readonly loggerService: LoggerService,
+
     @InjectModel(Movie.name) private movieModel: Model<MovieDocument>,
   ) {}
   async rateMovie(data: RateMovieDto, user: IUser): Promise<ApiResponse> {
@@ -22,7 +25,7 @@ export class MovieRatingsService {
 
       const isAlreadyRated = await this.movieRatingModel.findOne({
         user: user._id,
-        movie: data.movieId,
+        movie: new mongoose.Types.ObjectId(data.movieId.toString()),
       });
       if (isAlreadyRated) {
         return { status: HttpStatus.CONFLICT, message: 'Movie already rated!' };
@@ -40,9 +43,13 @@ export class MovieRatingsService {
 
       return { status: HttpStatus.CREATED, message: 'Rating added!' };
     } catch (error: any) {
+      this.loggerService.error(
+        `An error occurred while rating the movie ${error}, payload: ${JSON.stringify(data)}`,
+      );
+
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: `An error occurred while rating a movie error: ${error}`,
+        message: 'Something went wrong!',
       };
     }
   }

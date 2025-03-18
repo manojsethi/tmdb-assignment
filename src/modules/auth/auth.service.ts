@@ -6,12 +6,14 @@ import { ApiResponse } from '../../dtos/api_response.dto';
 import { User, UserDocument } from '../users/user.schema';
 import { SigninDto, SignupDto } from '../../dtos/auth/auth.dto';
 import { JwtService } from '@nestjs/jwt';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
+    private loggerService: LoggerService,
   ) {}
 
   generateToken(userId: string) {
@@ -32,9 +34,13 @@ export class AuthService {
 
       return { status: HttpStatus.CREATED, message: 'User created!' };
     } catch (error: any) {
+      this.loggerService.error(
+        `An error occurred while signing up error ${error}`,
+      );
+
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: `An error occurred while signing up error ${error}!`,
+        message: 'Something went wrong!',
       };
     }
   }
@@ -63,9 +69,13 @@ export class AuthService {
         data: { accessToken, email: user.email },
       };
     } catch (error: any) {
+      this.loggerService.error(
+        `An error occurred while signing in error ${error}`,
+      );
+
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: `An error occurred while signing in error ${error}!`,
+        message: 'Something went wrong!',
       };
     }
   }

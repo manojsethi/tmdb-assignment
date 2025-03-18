@@ -1,98 +1,264 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# TMDB RESTful API with NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**REST API** using **NestJS**, **MongoDB**, and **The Movie Database (TMDB)** API.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Features
+- Fetch movies from TMDB and store in MongoDB  
+- List movies with genre-based filtering  
+- User rating system  
+- Authentication (JWT) for secure API access  
+- Logging using `LoggerService` (Local + Rollbar)  
+- Error handling using global exception filters
+- Dockerized for easy deployment  
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## Tech Stack
+- Node.js & NestJS (REST API Framework)  
+- MongoDB & Mongoose (Database)  
+- TMDB API (Movie Data)  
+- JWT Authentication (Security)  
+- Logging (`@nestjs/common` Logger + Rollbar)  
+- Docker (Containerization)  
 
-```bash
-$ pnpm install
+---
+
+## Setup & Installation
+
+### Clone the Repository
+```sh
+git clone https://github.com/manojsethi/tmdb-assignment.git
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+### Install Dependencies
+```sh
+pnpm install
 ```
 
-## Run tests
+## Docker Setup
 
-```bash
-# unit tests
-$ pnpm run test
+---
 
-# e2e tests
-$ pnpm run test:e2e
+## Environment Variables
 
-# test coverage
-$ pnpm run test:cov
+Set the following environment variables before running the container:
+
+| Variable              | Description                      |
+|----------------------|--------------------------------|
+| `TMDB_MONGO_URI`    | MongoDB connection URI        |
+| `TMDB_PORT`         | Application port (default: 9000) |
+| `TMDB_API_KEY`      | External API Key |
+| `TMDB_JWT_SECRET_KEY` | JWT Secret Key for authentication |
+| `TMDB_LOGGER_ROLLBAR_POST_SERVER_TOKEN` | Rollbar Key for Logger |
+
+
+---
+
+## Build & Run Instructions
+
+### 1. Build the Docker Image
+Run the following command to build the Docker image:
+
+```sh
+docker build -t my-nest-app .
 ```
 
-## Deployment
+### 2. Run the Container
+Use the following command to start a container with the necessary environment variables:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g mau
-$ mau deploy
+```sh
+docker run -d -p 9000:9000 \
+  -e TMDB_MONGO_URI="your_mongodb_uri" \
+  -e TMDB_API_KEY="your_api_key" \
+  -e TMDB_JWT_SECRET_KEY="your_secret_key" \
+  -e TMDB_LOGGER_ROLLBAR_POST_SERVER_TOKEN="your_rollbar_key" \
+  --name my-nest-container my-nest-app
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Notes
+- Ensure that your MongoDB URI is accessible.  
+- The default port is 9000, but you can modify it as needed.  
+- Update the TMDB_API_KEY with a valid key.
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## API Endpoints
 
-## Support
+### Authentication
+| Method  | Endpoint        | Description          | Auth Required |
+|---------|---------------|----------------------|--------------|
+| POST    | `/auth/signup`  | Register a new user  | No |
+| POST    | `/auth/signin`  | Authenticate & get JWT | No |
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Sign Up
+**Request:**  
+```json
+{
+  "email": "testUser@yopmail.com",
+  "password": "Welcome12@#"
+}
+```
 
-## Stay in touch
+**Response:**  
+```json
+{
+    "status": 201,
+    "message": "User created!"
+}
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+#### Sign In
+**Request:**  
+```json
+{
+  "email": "testUser@yopmail.com",
+  "password": "Welcome12@#"
+}
+```
 
-## License
+**Response:**  
+```json
+{
+  "status": 200,
+  "data": { 
+      "accessToken": "your-jwt-token",
+      "email": "your-email" 
+   }
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+### Movies
+| Method  | Endpoint                  | Description                      | Auth Required |
+|---------|--------------------------|----------------------------------|--------------|
+| GET     | `/movies?page=1&limit=10` | List all movies (paginated)      | Yes |
+| GET     | `/movies/search?searchText=Mickey` | Search movies by title or overview | Yes |
+| GET     | `/movies/filter?genre=Action&genre=Action` | Filter movies by genre | Yes |
+| POST    | `/movies/rating`         | Rate a movie                     | Yes |
+
+#### List Movies
+**Request:**  
+```http
+GET /movies?page=1&limit=20
+Authorization: Bearer your-jwt-token
+```
+
+**Response:**  
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "_id": "67d90bf278dd09061d02f330",
+            "movieId": 1361451,
+            "__v": 0,
+            "genre": [
+                "Drama",
+                "Crime"
+            ],
+            "overview": "Miquel moves to a town in the Spanish countryside. He is there to work in an industrial mill, ran by siblings María and Ángel. María, who dislikes her work and the neighbours she has to do business with, finds in Miquel a person similar to her.",
+            "posterPath": "https://api.themoviedb.org/3/edKpE9B5qN3e559OuMCLZdW1iBZ.jpg",
+            "rating": 0,
+            "releaseDate": "2025-03-17",
+            "title": "La terra negra"
+        }}
+```
+
+#### Search Movies
+**Request:**  
+```http
+GET /movies/search?searchText=Mickey
+Authorization: Bearer your-jwt-token
+```
+
+**Response:**  
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "_id": "67d90bf278dd09061d02f31f",
+            "movieId": 696506,
+            "__v": 0,
+            "genre": [
+                "Science Fiction",
+                "Comedy",
+                "Adventure"
+            ],
+            "overview": "Unlikely hero Mickey Barnes finds himself in the extraordinary circumstance of working for an employer who demands the ultimate commitment to the job… to die, for a living.",
+            "posterPath": "https://api.themoviedb.org/3/edKpE9B5qN3e559OuMCLZdW1iBZ.jpg",
+            "rating": 0,
+            "releaseDate": "2025-02-28",
+            "title": "Mickey 17"
+        }
+      ]
+}
+```
+
+#### Filter Movies by Genre
+**Request:**  
+```http
+GET /movies/filter?genre=Action
+Authorization: Bearer your-jwt-token
+```
+
+**Response:**  
+```json
+{
+    "status": 200,
+    "data": [
+        {
+            "_id": "67d95c2078dd09061d02f6ea",
+            "movieId": 696506,
+            "__v": 0,
+            "genre": [
+                "Science Fiction",
+                "Comedy",
+                "Adventure"
+            ],
+            "overview": "Unlikely hero Mickey Barnes finds himself in the extraordinary circumstance of working for an employer who demands the ultimate commitment to the job… to die, for a living.",
+            "posterPath": "https://api.themoviedb.org/3/edKpE9B5qN3e559OuMCLZdW1iBZ.jpg",
+            "rating": 0,
+            "releaseDate": "2025-02-28",
+            "title": "Mickey 17"
+        }
+    ]
+}
+```
+
+#### Rate a Movie
+**Request:**  
+```http
+POST /movies/rating
+Authorization: Bearer your-jwt-token
+Content-Type: application/json
+```
+
+**Body:**  
+```json
+{
+  "movieId": "67d90bf278dd09061d02f327",
+  "rating": 4
+}
+```
+
+**Response:**  
+```json
+{
+  "status": 201,
+  "message": "Rating added!"
+}
+```
+
+---
+
+## Authentication Usage
+- After signing in, copy the JWT token and include it in the `Authorization` header for all protected routes:
+```
+Authorization: Bearer your-jwt-token
+```

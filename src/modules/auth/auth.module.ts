@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import * as dotenv from 'dotenv';
 import { User, UserSchema } from '../users/user.schema';
 import { JwtStrategy } from '../../stratagies/jwt.strategy';
+import { envConfig } from '../../config/env_configuration';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ dotenv.config();
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: process.env.TMDB_JWT_SECRET_KEY || '',
+      secret: envConfig.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
   ],

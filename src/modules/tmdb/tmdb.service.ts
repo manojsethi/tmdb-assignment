@@ -3,12 +3,13 @@ import axios from 'axios';
 import { IGenre } from '../../interfaces/genre';
 import { Movie } from '../movies/movie.schema';
 import { ITMDBMovie } from '../../interfaces/tmdb';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class TmdbService {
   private genreMap: { [key: number]: string } = {};
 
-  constructor() {
+  constructor(private readonly loggerService: LoggerService) {
     //eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.loadGenres();
   }
@@ -20,7 +21,7 @@ export class TmdbService {
   private async loadGenres(): Promise<void> {
     try {
       const response: { data: { genres: IGenre[] } } = await axios.get(
-        `${process.env.TMDB_BASE_URL}/genre/movie/list`,
+        `https://api.themoviedb.org/3/genre/movie/list`,
         {
           params: { api_key: process.env.TMDB_API_KEY },
         },
@@ -35,7 +36,9 @@ export class TmdbService {
         {},
       );
     } catch (error: any) {
-      console.error(`Failed to load TMDB genres error: ${error}`);
+      this.loggerService.error(
+        `An error occurred while syncing the movies ${error}!`,
+      );
 
       this.genreMap = [];
     }
@@ -44,7 +47,7 @@ export class TmdbService {
   async fetchPopularMovies(): Promise<Movie[]> {
     try {
       const response: { data: { results: ITMDBMovie[] } } = await axios.get(
-        `${process.env.TMDB_BASE_URL}/movie/popular`,
+        `https://api.themoviedb.org/3/movie/popular`,
         {
           params: { api_key: process.env.TMDB_API_KEY },
         },
@@ -57,11 +60,15 @@ export class TmdbService {
           overview: movie.overview,
           genre: this.getGenreNames(movie.genre_ids),
           releaseDate: movie.release_date,
-          posterPath: movie.poster_path,
+          posterPath: 'https://api.themoviedb.org/3' + movie.poster_path,
           rating: 0,
         }),
       );
     } catch (error: any) {
+      this.loggerService.error(
+        `An error occurred while fetching the movies list ${error}!`,
+      );
+
       throw new HttpException(
         'Failed to fetch movies from TMDB',
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Movie, MovieDocument } from './movie.schema';
@@ -6,12 +6,13 @@ import { ApiResponse } from '../../dtos/api_response.dto';
 import { TmdbService } from '../tmdb/tmdb.service';
 import { Cron } from '@nestjs/schedule';
 import { SearchMoviesDto } from '../../dtos/movies/search_movies.dto';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class MoviesService {
   constructor(
     @InjectModel(Movie.name) private movieModel: Model<MovieDocument>,
-
+    private readonly loggerService: LoggerService,
     private readonly tmdbService: TmdbService,
   ) {}
 
@@ -39,16 +40,14 @@ export class MoviesService {
         message: 'Movies synced!',
       };
     } catch (error: any) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Failed to fetch movies from TMDB',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        },
+      this.loggerService.error(
+        `An error occurred while syncing the movies ${error}!`,
       );
+
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong!',
+      };
     }
   }
 
@@ -74,16 +73,14 @@ export class MoviesService {
         data: movies,
       };
     } catch (error: any) {
-      throw new HttpException(
-        {
-          status: 'error',
-          message: 'Failed to fetch movies from TMDB',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        },
+      this.loggerService.error(
+        `An error occurred while getting the movies list ${error}!`,
       );
+
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong!',
+      };
     }
   }
 
@@ -102,20 +99,20 @@ export class MoviesService {
 
       return { status: HttpStatus.OK, data: movies };
     } catch (error: any) {
-      throw new HttpException(
-        {
-          status: 'error',
-          message: 'Failed to fetch movies!',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        },
+      this.loggerService.error(
+        `An error occurred while searching the movies ${error}`,
       );
+
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong!',
+      };
     }
   }
 
-  async filterMoviesByGenre(genre: string[]): Promise<ApiResponse<Movie[]>> {
+  async filterMoviesByGenre(
+    genre: Array<string>,
+  ): Promise<ApiResponse<Movie[]>> {
     try {
       const movies = await this.movieModel.aggregate([
         {
@@ -145,16 +142,14 @@ export class MoviesService {
 
       return { status: HttpStatus.OK, data: movies };
     } catch (error: any) {
-      throw new HttpException(
-        {
-          status: 'error',
-          message: 'Failed to filter movies!',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        },
+      this.loggerService.error(
+        `An error occurred while filtering the movies ${error},  payload: ${JSON.stringify(genre)}`,
       );
+
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong!',
+      };
     }
   }
 }

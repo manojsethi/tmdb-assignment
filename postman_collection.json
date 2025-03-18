@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "d5e06afb-8c53-44cc-8531-fb55d859ea66",
+		"name": "TMDB_ASSIGNMENT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38006417",
+		"_collection_link": "https://interstellar-desert-571069.postman.co/workspace/Gurdeep'-workspace~c75f03f0-0f08-47b4-8ce6-3336570d310c/collection/38006417-d5e06afb-8c53-44cc-8531-fb55d859ea66?action=share&source=collection_link&creator=38006417"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "sign-up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"atul@gmail.com\",\"password\":\"Welcome12@#\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign-in",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"email\": \"atul@gmail.com\", \"password\": \"Welcome12@#\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "movies",
+			"item": [
+				{
+					"name": "getMoviesList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDk1ZmEwZDk5MGVmMGE0Yzk5ZDlhNSIsImlhdCI6MTc0MjI5OTA2MCwiZXhwIjoxNzQyMzAyNjYwfQ.BHoqKszk4_Bp-b95uYPE9cO1nE-r-mOz6qpqXeDfGj8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchMovies",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDk0ZTM0OTE4ZDE4NWFjM2UzMDE1NCIsImlhdCI6MTc0MjI5NDU5MCwiZXhwIjoxNzQyMjk4MTkwfQ.8GQwk-cuCkk7sEDO6hMUHEJIb6TYk8NaBGNkDL370V8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/movies/search?searchText=s",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"movies",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchText",
+									"value": "s"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filterMoviesByGenre",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDk1Y2ZiZDdlN2UyZDBmMzUzZjZjYyIsImlhdCI6MTc0MjI5ODM2OSwiZXhwIjoxNzQyMzAxOTY5fQ.6qszA05Ep3uNMsj9R352Z17k_O_2Suxw0bUl84oYc3A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/movies/filter/genre?genre=COMEDY&genre=Action&genre=action",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"movies",
+								"filter",
+								"genre"
+							],
+							"query": [
+								{
+									"key": "genre",
+									"value": "COMEDY"
+								},
+								{
+									"key": "genre",
+									"value": "Action"
+								},
+								{
+									"key": "genre",
+									"value": "action"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "movie_rating",
+			"item": [
+				{
+					"name": "add-movie-rating",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwYzAyMmIwNDE5MTUxZmZkYTU2OSIsImlhdCI6MTc0MjI3NzYzNywiZXhwIjoxNzQyMjgxMjM3fQ.lhGqmOIX1VhNPqea1gcgm8giWYQRe0uZTJJZuKTImaI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"movieId\": \"67d90bf278dd09061d02f327\",\n    \"rating\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/movies/rating",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"movies",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

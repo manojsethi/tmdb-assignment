@@ -5,14 +5,18 @@ import { MoviesModule } from './movies/movies.module';
 import { AuthModule } from './auth/auth.module';
 import { MovieRatingsModule } from './movie_ratings/movie_ratings.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { LoggerService } from './logger/logger.service';
+import { LoggerModule } from './logger/logger.module';
+import { envConfig } from '../config/env_configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRoot(process.env.TMDB_MONGO_URI || ''),
+    MongooseModule.forRoot(envConfig.MONGO_URI || ''),
     MoviesModule,
     AuthModule,
     MovieRatingsModule,
+    LoggerModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {
@@ -23,6 +27,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [LoggerService],
 })
 export class AppModule {}

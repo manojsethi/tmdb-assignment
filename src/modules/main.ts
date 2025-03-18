@@ -1,12 +1,22 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MoviesService } from './movies/movies.service';
 import { Movie } from './movies/movie.schema';
 import { Model } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
+import { LoggerService } from './logger/logger.service';
+import { envConfig } from '../config/env_configuration';
+import { AllExceptionsFilter } from '../utils/all-exceptions.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new LoggerService();
+  const app = await NestFactory.create(AppModule, {
+    logger,
+  });
+
+  app.useGlobalFilters(
+    new AllExceptionsFilter(app.get(HttpAdapterHost), logger),
+  );
 
   const moviesService = app.get(MoviesService);
   const movieModel = app.get<Model<Movie>>(getModelToken(Movie.name));
@@ -18,7 +28,7 @@ async function bootstrap() {
     moviesService.syncMoviesFromTMDB();
   }
 
-  await app.listen(process.env.TMDB_PORT || 9000);
+  await app.listen(envConfig.PORT);
 }
 
 //eslint-disable-next-line @typescript-eslint/no-floating-promises
